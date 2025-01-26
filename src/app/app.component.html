@@ -1,0 +1,37 @@
+
+<div class="container">
+  <h1>Enter City To Fetch Forecast</h1>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Enter city name"
+      [(ngModel)]="cityName"
+    />
+    <button class="btn btn-primary" (click)="getData()">Submit</button>
+  </div>
+
+  <h3 *ngIf="forecast.length > 0"> Here's your forecast for {{cityName}}</h3>
+  <table class="table" *ngIf="forecast.length>0">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Lowest (°C)</th>
+        <th>Highest (°C)</th>
+        <th>Prediction</th>
+        <th>Time Window</th>
+        <th>Recommendation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let day of forecast">
+        <td>{{ day.dt * 1000 | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ kelvinToCelsius(day.lowTemp) }}</td>
+        <td>{{ kelvinToCelsius(day.highTemp) }}</td>
+        <td>{{ day.description }}</td>
+        <td>00:00 - 23:59</td>
+        <td>{{ getRecommendation(day) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
