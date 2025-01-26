@@ -1,0 +1,23 @@
+# Dockerfile
+FROM openjdk:17-jdk-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy compiled JAR and dependencies
+COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+COPY src/main/resources/application.properties app-config.properties
+
+# Expose application port
+EXPOSE 8080
+
+# Environment variables for configuration
+#ENV WEATHER_API_KEY=d2929e9483efc82c82c32ee7e02d563e
+ENV SPRING_PROFILES_ACTIVE=production
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Runtime configuration
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
