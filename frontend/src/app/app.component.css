@@ -1,0 +1,30 @@
+.input-group{
+    text-align:center;
+}
+.container{
+    text-align:center;
+}
+.btn {
+    padding: 12px 20px;
+}
+input[type=text] {
+    width: 30%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-collapse: collapse;
+  }
+
+table {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #f2f2f2;
+}
