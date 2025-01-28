@@ -26,9 +26,4 @@ public class WeatherController {
         
         return weatherService.getWeatherForCity(request);
     }
-
-    @PostMapping(value = "/test")
-    public String getTestValue() {
-        return "successfull";
-    }
 }
