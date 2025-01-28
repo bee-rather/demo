@@ -1,0 +1,102 @@
+pipeline {
+    agent any
+    
+    // Define environment variables
+    environment {
+        DOCKER_BACKEND_IMAGE = 'backend'
+        DOCKER_FRONTEND_IMAGE = 'frontend'
+        VERSION = "1"
+    }
+    
+    // Define tools
+    tools {
+        nodejs 'NODE_16'
+        maven 'MAVEN_3'
+        jdk 'JAVA_17'
+    }
+    
+    stages {
+        // Checkout source code
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        // Backend build and test
+        stage('Build Backend') {
+            steps {
+                dir('backend') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+        
+        // Frontend build
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run build --prod'
+                }
+            }
+        }
+        
+        // Run tests
+        stage('Test') {
+            parallel {
+                stage('Backend Tests') {
+                    steps {
+                        dir('backend') {
+                            sh 'mvn test'
+                        }
+                    }
+                }
+                stage('Frontend Tests') {
+                    steps {
+                        dir('frontend') {
+                            sh 'npm run test -- --watch=false --browsers=ChromeHeadless'
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Build Docker images
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    // Build backend Docker image
+                    docker.build("${DOCKER_BACKEND_IMAGE}:${VERSION}", './backend')
+                    
+                    // Build frontend Docker image
+                    docker.build("${DOCKER_FRONTEND_IMAGE}:${VERSION}", './frontend')
+                }
+            }
+        }
+        
+        // Deploy stage
+        stage('Deploy') {
+            steps {
+                script {
+                    // Deploy using docker-compose
+                    sh 'docker-compose -f docker-compose.yml up -d'
+                }
+            }
+        }
+    }
+    
+    // Post-build actions
+    post {
+        always {
+            // Clean up Docker images
+            sh 'docker system prune -f'
+        }
+        success {
+            echo 'Pipeline successfully completed!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
