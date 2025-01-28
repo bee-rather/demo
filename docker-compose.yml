@@ -27,14 +27,6 @@ services:
     networks:
       - weather-app-network
 
-  # Optional: Monitoring Service
-  monitoring:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - weather-app-network
-
 networks:
   weather-app-network:
     driver: bridge
