@@ -209,8 +209,7 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			<build>
+			</plugin>		
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -221,7 +220,6 @@
 					</configuration>
 				</plugin>
 			</plugins>
-		</build>
 		</plugins>
 	</build>
 
