@@ -62,25 +62,23 @@ pipeline {
         //     }
         // }
         
-        // Build Docker images
-        stage('Build Docker Images') {
+       stage('Build Docker Images') {
             steps {
                 script {
-                    // Build backend Docker image
-                    docker.build("${DOCKER_BACKEND_IMAGE}:${VERSION}", './backend/target/demo-0.0.1-SNAPSHOT.jar app.jar')
-                    
-                    // Build frontend Docker image
-                    docker.build("${DOCKER_FRONTEND_IMAGE}:${VERSION}", './frontend/app/dist/frontend/browser')
+                    docker.build("${DOCKER_BACKEND_IMAGE}:${VERSION}", './backend')
+                    docker.build("${DOCKER_FRONTEND_IMAGE}:${VERSION}", './frontend')
                 }
             }
         }
         
-        // Deploy stage
         stage('Deploy') {
             steps {
                 script {
-                    // Deploy using docker-compose
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    sh 'pwd && ls -l'
+                    
+                    dir('/var/lib/jenkins/workspace/demo') {
+                        sh 'docker-compose -f docker-compose.yml up -d'
+                    }
                 }
             }
         }
