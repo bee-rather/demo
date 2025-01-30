@@ -67,10 +67,10 @@ pipeline {
             steps {
                 script {
                     // Build backend Docker image
-                    docker.build("${DOCKER_BACKEND_IMAGE}:${VERSION}", './backend')
+                    docker.build("${DOCKER_BACKEND_IMAGE}:${VERSION}", './backend/target/demo-0.0.1-SNAPSHOT.jar app.jar')
                     
                     // Build frontend Docker image
-                    docker.build("${DOCKER_FRONTEND_IMAGE}:${VERSION}", './frontend')
+                    docker.build("${DOCKER_FRONTEND_IMAGE}:${VERSION}", './frontend/app/dist/frontend/browser')
                 }
             }
         }
